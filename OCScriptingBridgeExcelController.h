@@ -12,7 +12,7 @@
 #import "excel2011.h"
 
 
-@interface OCExcelSBHelperObj : NSObject 
+@interface OCExcelSBHelperObj : NSObject
 
 #pragma mark -
 #pragma mark Class Management Methods
@@ -28,7 +28,7 @@
 
 /*
  Useful snippets (assuming this class is instantiated as 'excel')
- 
+
  // get the first sheet in a selected workbook
  excel2011Workbook *workbook = [excel openWorkbookAtPath:path];
  excel2011Sheet *worksheet = [excel getSheetInWorkbook:workbook atIndex:0];
@@ -36,6 +36,7 @@
 
 - (excel2011Workbook *) openWorkbookAtPath:(NSString *)hfsPath;
 - (void) closeWorkbook:(excel2011Workbook *)workbook;
+- (excel2011Workbook *) getOpenWorkbookAtIndex:(int)index;
 - (excel2011Sheet *) getSheetInWorkbook:(excel2011Workbook *)workbook withName:(NSString *)sheetName;
 - (excel2011Sheet *) getSheetInWorkbook:(excel2011Workbook *)workbook atIndex:(int)sheetIndex;
 
@@ -49,6 +50,7 @@
 
 /* SET */
 
+- (BOOL) setValues:(NSArray *)values toRangeStart:(NSString *)rangeStartCell toRangeEnd:(NSString *)rangeEndCell inSheet:(excel2011Sheet *)sheet;
 - (BOOL) setString:(NSString *)value inCell:(NSString *)cellColumnRow inSheet:(excel2011Sheet *)sheet;
 
 #pragma mark Object Creation

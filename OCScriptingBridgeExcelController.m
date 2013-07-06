@@ -34,11 +34,11 @@
 
 - (NSDictionary *)testClass {
 	NSMutableDictionary *testResults = [NSDictionary dictionary];
-	
+
 	if (!self.excelApp) {
 		[testResults setObject:kOC_Error_SrptgBrdg_ExcelAppNotFoundValue forKey:kOC_Error_SrptgBrdg_ExcelAppNotFoundKey];
 	}
-	
+
 	return testResults;
 }
 
@@ -50,26 +50,34 @@
 
 - (excel2011Workbook *) openWorkbookAtPath:(NSString *)hfsPath {
 		// filepath is an HFS file path (colon-based), not a POSIX path.
-	excel2011Workbook *workbook = [self.excelApp openWorkbookWorkbookFileName:hfsPath 
-															 updateLinks:excel2011E294DoNotUpdateLinks 
-																readOnly:NO 
-																  format:excel2011E295NoDelimiter 
-																password:[NSString stringWithFormat:@""] 
-												   writeReservedPassword:[NSString stringWithFormat:@""] 
-											   ignoreReadOnlyRecommended:NO 
-																  origin:excel2011E211Macintosh 
+	excel2011Workbook *workbook = [self.excelApp openWorkbookWorkbookFileName:hfsPath
+															 updateLinks:excel2011E294DoNotUpdateLinks
+																readOnly:NO
+																  format:excel2011E295NoDelimiter
+																password:[NSString stringWithFormat:@""]
+												   writeReservedPassword:[NSString stringWithFormat:@""]
+											   ignoreReadOnlyRecommended:NO
+																  origin:excel2011E211Macintosh
 															   delimiter:nil
-																editable:YES 
-																  notify:NO 
+																editable:YES
+																  notify:NO
 															   converter:0
 																addToMru:NO];
 	return workbook;
 }
 
 - (void) closeWorkbook:(excel2011Workbook *)workbook {
-        
+
     [workbook closeSaving:NO savingIn:excel2011XLfdPosixPath];
-     
+
+}
+
+- (excel2011Workbook *) getOpenWorkbookAtIndex:(int)index {
+    NSUInteger workbooksCount = [[self.excelApp workbooks] count];
+	if (index <= workbooksCount) {
+		return [[self.excelApp workbooks] objectAtLocation:[NSNumber numberWithInt:index]];
+	}
+	return nil;
 }
 
 - (excel2011Sheet *) getSheetInWorkbook:(excel2011Workbook *)workbook withName:(NSString *)sheetName {
@@ -94,7 +102,7 @@
 	NSString *theText = @"cSyoyodylg";
 	while (![theText isEqualToString:@""]) {
 		rowNumber++;
-		
+
 		// create the range
 		NSString *rangeString = [NSString stringWithFormat:@"%@%i:%@%i", keyColumn, rowNumber, keyColumn, rowNumber];
 		theText = [self getStringValueInCell:rangeString inSheet:sheet];
@@ -115,19 +123,35 @@
     return [self deitemizeColumnArray:cellValues];
 }
 
-- (BOOL) setString:(NSString *)value inCell:(NSString *)cellColumnRow inSheet:(excel2011Sheet *)sheet {
-    
+- (BOOL) setValues:(NSArray *)values toRangeStart:(NSString *)rangeStartCell toRangeEnd:(NSString *)rangeEndCell inSheet:(excel2011Sheet *)sheet {
+
     // get the range for the coordinates
-    excel2011Range *range = [self createRange:[NSString stringWithFormat:@"%@:%@", cellColumnRow, cellColumnRow] 
-                                      inSheet:sheet 
+    excel2011Range *range = [self createRange:[NSString stringWithFormat:@"%@:%@", rangeStartCell, rangeEndCell]
+                                      inSheet:sheet
                                       inExcel:self.excelApp];
-    
+
+    if (!range) {
+        return NO;
+    }
+    // set the value for that range
+    range.value = values;
+
+    return YES;
+}
+
+- (BOOL) setString:(NSString *)value inCell:(NSString *)cellColumnRow inSheet:(excel2011Sheet *)sheet {
+
+    // get the range for the coordinates
+    excel2011Range *range = [self createRange:[NSString stringWithFormat:@"%@:%@", cellColumnRow, cellColumnRow]
+                                      inSheet:sheet
+                                      inExcel:self.excelApp];
+
     if (!range) {
         return NO;
     }
     // set the value for that range
     range.value = value;
-    
+
     return YES;
 }
 
