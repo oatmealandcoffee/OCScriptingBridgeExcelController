@@ -13,10 +13,12 @@ Project Information
 Requirements: Mac OS X's Scripting Bridge, Microsoft Excel 2011
 Notes:
 Change History:
-    DEVELOPMENT
-    13_06_21_01_00_000: Posted source
-    13_07_06_01_01_000: Added function for getting an open workbook
-    					Added function for setting an array of values (strings) to a range of cells as opposed to a single string to a single cell.
+DEVELOPMENT
+13_06_21_01_00_000:
+Posted source
+13_07_06_01_01_000:
+Added function for getting an open workbook
+Added function for setting an array of values (strings) to a range of cells as opposed to a single string to a single cell.
 
 License
 =======
